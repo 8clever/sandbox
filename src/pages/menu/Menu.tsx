@@ -122,35 +122,44 @@ export const Menu = (props: MenuProps) => {
 
     return (
       <MenuBodyContainer 
-        ref={refCallback}
-        isCollapsed={isCollapsed}>
-        <Scrollbars style={{
-          width,
-          height
-        }}>
-          {section ? (
-            <BackButton title={section.title} onClick={() => setSection(null)} />
-          ) : null}
-          {sections.map((i, idx) => {
-            if (_.values(PUBLIC).includes(String(i.id))) {
-              return null
-            }
-
-            const p = {
-              ...i,
-              onClick: () => {
-                if (i.children) {
-                  setSection(i.id)
-                  return
-                }
-
-                props.history.push(
-                  section ? getUrl(i.path, section.path) : getUrl(i.path)
-                )
+        ref={refCallback} >
+        <Scrollbars
+          autoHideTimeout={1000}
+          autoHideDuration={200}
+          autoHide
+          style={{
+            width,
+            height,
+          }}>
+          <div style={{
+            marginTop: "12px",
+            marginLeft: isCollapsed ? 3 : 0,
+            marginRight: isCollapsed ? 4 : 0
+          }}>
+            {section ? (
+              <BackButton title={section.title} onClick={() => setSection(null)} />
+            ) : null}
+            {sections.map((i, idx) => {
+              if (_.values(PUBLIC).includes(String(i.id))) {
+                return null
               }
-            }
-            return <MenuItem active={activeMenuId === i.id} key={idx} {...p} />
-          })}
+
+              const p = {
+                ...i,
+                onClick: () => {
+                  if (i.children) {
+                    setSection(i.id)
+                    return
+                  }
+
+                  props.history.push(
+                    section ? getUrl(i.path, section.path) : getUrl(i.path)
+                  )
+                }
+              }
+              return <MenuItem active={activeMenuId === i.id} key={idx} {...p} />
+            })}
+          </div>
         </Scrollbars>
       </MenuBodyContainer>
     )

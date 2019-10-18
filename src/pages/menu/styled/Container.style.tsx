@@ -14,7 +14,7 @@ export const ContainerVertical = styled.div<ContainerVerticalProps>`
   justify-content: space-between;
   padding: ${props => (props.isCollapsed ? "0" : "0 20px")};
   transition: all 0.5s;
-  max-width: ${props => (props.isCollapsed ? "64px" : "260px")};
+  width: ${props => (props.isCollapsed ? "64px" : "240px")};
 `
 
 interface MenuBodyContainerProps {

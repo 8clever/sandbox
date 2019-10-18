@@ -60,6 +60,7 @@ export const MenuItemTooltip = styled.div`
   box-shadow: 0px 4px 8px rgba(77, 92, 118, 0.15);
   border-radius: 3px;
 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   align-items: center;
   font-style: normal;
   font-weight: 500;
@@ -67,8 +68,6 @@ export const MenuItemTooltip = styled.div`
   line-height: 15px;
 
   padding: 12px 16px;
-  left: 60px;
-  top: 20px;
   z-index: 1000;
 
   color: #ffffff;
