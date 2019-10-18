@@ -1,4 +1,4 @@
-# school-dance
+# SANDBOX
 
 My cool TypeScript app
 
