@@ -45,7 +45,7 @@ export const MenuItem = (props: MenuItemProps) => {
   const [isHover, setIsHover] = React.useState(false)
 
   return (
-    <MenuItemContainer active={props.active} onClick={props.onClick}>
+    <MenuItemContainer active={props.active}>
       {isHover ? <MenuItemTooltip>{props.title}</MenuItemTooltip> : null}
       <MenuItemIconContainer
         onMouseEnter={() => setIsHover(true)}

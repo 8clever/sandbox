@@ -17,6 +17,8 @@ import {Dropdown, DropdownItem, Anchor} from "./styled/Dropdown.style"
 import {TripleDot} from "./icons/TripleDot"
 import OutsideClickHandler from "react-outside-click-handler"
 import {History} from "history"
+import {Scrollbars} from "react-custom-scrollbars";
+import { useResizeObserver } from "../../effects/useResizeObserver"
 import _ from "lodash"
 
 export interface MenuProps {
@@ -64,7 +66,7 @@ export const Menu = (props: MenuProps) => {
   const [isCollapsed, setIsCollapsed] = React.useState(true)
   const [profileMenu, setProfileMenu] = React.useState(false)
   const [tripleDotMenu, setTripleDotMenu] = React.useState(false)
-  const [activeMenuId, setActiveMenuId] = React.useState<string | null>(null)
+  const [activeMenuId, setActiveMenuId] = React.useState<string | number | null>(null)
   const [sectionId, setSection] = React.useState<string | number | null>(
     props.defaultSection || null
   )
@@ -115,33 +117,44 @@ export const Menu = (props: MenuProps) => {
       </CollapseButton>
     </Header>
   )
-  const BodyElement = () => (
-    <MenuBodyContainer isCollapsed={isCollapsed}>
-      {section ? (
-        <BackButton title={section.title} onClick={() => setSection(null)} />
-      ) : null}
-      {sections.map((i, idx) => {
-        if (_.values(PUBLIC).includes(String(i.id))) {
-          return null
-        }
+  const BodyElement = () => {
+    const [width, height, refCallback] = useResizeObserver();
 
-        const p = {
-          ...i,
-          onClick: () => {
-            if (i.children) {
-              setSection(i.id)
-              return
+    return (
+      <MenuBodyContainer 
+        ref={refCallback}
+        isCollapsed={isCollapsed}>
+        <Scrollbars style={{
+          width,
+          height
+        }}>
+          {section ? (
+            <BackButton title={section.title} onClick={() => setSection(null)} />
+          ) : null}
+          {sections.map((i, idx) => {
+            if (_.values(PUBLIC).includes(String(i.id))) {
+              return null
             }
 
-            props.history.push(
-              section ? getUrl(i.path, section.path) : getUrl(i.path)
-            )
-          }
-        }
-        return <MenuItem active={activeMenuId === i.id} key={idx} {...p} />
-      })}
-    </MenuBodyContainer>
-  )
+            const p = {
+              ...i,
+              onClick: () => {
+                if (i.children) {
+                  setSection(i.id)
+                  return
+                }
+
+                props.history.push(
+                  section ? getUrl(i.path, section.path) : getUrl(i.path)
+                )
+              }
+            }
+            return <MenuItem active={activeMenuId === i.id} key={idx} {...p} />
+          })}
+        </Scrollbars>
+      </MenuBodyContainer>
+    )
+  }
 
   const FooterElement = () => (
     <Footer isCollapsed={isCollapsed}>
@@ -234,10 +247,8 @@ export const Menu = (props: MenuProps) => {
 
   return (
     <ContainerVertical isCollapsed={isCollapsed}>
-      <div>
-        <HeaderElement />
-        <BodyElement />
-      </div>
+      <HeaderElement />
+      <BodyElement />
       <FooterElement />
     </ContainerVertical>
   )

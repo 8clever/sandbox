@@ -21,6 +21,8 @@ interface MenuBodyContainerProps {
   isCollapsed?: boolean
 }
 export const MenuBodyContainer = styled.div<MenuBodyContainerProps>`
-  margin-top: 12px;
+  justify-self: stretch;
+  height: 100%;
+  width: 100%;
   ${props => (props.isCollapsed ? "padding: 0 4px 0 3px" : "")}
 `
