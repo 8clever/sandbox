@@ -56,7 +56,16 @@ export const MenuTooltip = (props: MenuTooltipProps) => {
   const anchorRef = React.useRef<HTMLDivElement>();
 
   React.useLayoutEffect(() => {
-    if (props.isHover) {
+    props.isHover ? createTooltip() : removeTooltip();
+    return removeTooltip;
+
+    function removeTooltip () {
+      const $el = document.getElementById(id);
+      if (!$el) return;
+      $el.remove();
+    }
+
+    function createTooltip () {
       const $el = document.createElement("div");
       const $body = document.querySelector("body");
       const rect = anchorRef.current.getBoundingClientRect();
@@ -73,12 +82,7 @@ export const MenuTooltip = (props: MenuTooltipProps) => {
       $el.id = id;
       ReactDOM.render(Tooltip, $el);
       $body.appendChild($el);
-      return;
     }
-
-    const $el = document.getElementById(id);
-    if (!$el) return;
-    $el.remove();
   }, [props.isHover]);
   
   return <div ref={anchorRef} />;
@@ -90,15 +94,15 @@ export const MenuItem = (props: MenuItemProps) => {
   return (
     <MenuItemContainer active={props.active} onClick={props.onClick}>
       <MenuTooltip 
-        offsetLeft={40}
         children={props.title}
-        isHover={isHover} />
+        offsetLeft={40}
+        isHover={isHover} 
+      />
       <MenuItemIconContainer
+        children={props.icon}
         onMouseEnter={() => setIsHover(true)}
         onMouseLeave={() => setIsHover(false)}
-      >
-        {props.icon}
-      </MenuItemIconContainer>
+      />
       <div style={{overflow: "hidden"}}>
         <MenuItemTitleContainer>
           {props.title}
