@@ -5,7 +5,7 @@ import {
   MenuItemIconContainer,
   MenuItemTitleContainer,
   MenuItemTooltip
-} from "./styled/MenuItem.style"
+} from "./styled/menuItem.style"
 import {ButtonBackIcon} from "./icons/ButtonBack"
 import { useResizeObserver } from "../../effects/useResizeObserver";
 
