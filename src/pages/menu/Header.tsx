@@ -4,7 +4,8 @@ import {
   HeaderTitle, 
   LogoMin, 
   Logo, 
-  CollapseButton, 
+  CollapseButton,
+  HeaderHorizontalContainer, 
 } from "./styled/header.style";
 import { MenuContext } from "./Menu";
 import {ChevronLeft, ChevronRight} from "./icons/Chevron"
@@ -18,9 +19,9 @@ export const Header = () => {
     <HeaderContainer isCollapsed={isCollapsed}>
       <HeaderTitle>
         {isCollapsed ? (
-          <LogoMin src={props.logoUrl} />
+          <LogoMin src={props.logoMinUrl} />
         ) : (
-          <Logo src={props.logoMinUrl} />
+          <Logo src={props.logoUrl} />
         )}
       </HeaderTitle>
       <CollapseButton
@@ -32,5 +33,15 @@ export const Header = () => {
         {isCollapsed ? <ChevronRight /> : <ChevronLeft />}
       </CollapseButton>
     </HeaderContainer>
+  )
+}
+
+export const HeaderHorizontal = () => {
+  const ctx = React.useContext(MenuContext);
+
+  return (
+    <HeaderHorizontalContainer>
+      <Logo src={ctx.props.logoUrl} />
+    </HeaderHorizontalContainer>
   )
 }

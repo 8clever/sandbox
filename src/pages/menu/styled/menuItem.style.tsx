@@ -5,6 +5,7 @@ interface MenuItemContainerProps {
 }
 
 export const MenuItemContainer = styled.div<MenuItemContainerProps>`
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
   padding: 13px 16px 13px 17px;
   display: flex;
   cursor: pointer;

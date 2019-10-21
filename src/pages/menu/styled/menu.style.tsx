@@ -1,21 +1,21 @@
 import styled from "styled-components";
 
-
-
-
 export const Anchor = styled.div`
   position: relative;
 `
 
 export const Dropdown = styled.div`
   background: #f9fafb;
-  box-shadow: 0px 4px 16px rgba(0, 78, 155, 0.1);
   border-radius: 8px;
   position: absolute;
   min-width: 210px;
   z-index: 10;
   bottom: 8px;
   border-radius: 6px;
+`
+
+export const DropdownShadow = styled.div`
+  box-shadow: 0px 4px 16px rgba(0, 78, 155, 0.1);
 `
 
 interface DropdownItemProps {
@@ -61,9 +61,18 @@ export const ContainerVertical = styled.div<ContainerVerticalProps>`
   justify-content: space-between;
   padding: ${props => (props.isCollapsed ? "0" : "0 20px")};
   transition: all 0.5s;
-  width: ${props => (props.isCollapsed ? "64px" : "240px")};
+  min-width: ${props => (props.isCollapsed ? "64px" : "240px")};
+  max-width: ${props => (props.isCollapsed ? "64px" : "240px")};
 `
 
-
+export const ContainerHorizontal = styled.div`
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen,
+    Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;
+  background-color: #f7f9fa;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+  height: 65px;
+`
 
 

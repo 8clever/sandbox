@@ -2,11 +2,11 @@ import * as React from "react"
 import {MenuItemProps} from "./MenuItem"
 import {History} from "history"
 import { 
-  ContainerVertical 
+  ContainerVertical, ContainerHorizontal 
 } from "./styled/menu.style"
-import { Footer } from "./Footer";
-import { Header } from "./Header";
-import { Body } from "./Body";
+import { Footer, FooterHorizontal } from "./Footer";
+import { Header, HeaderHorizontal } from "./Header";
+import { Body, BodyHorizontal } from "./Body";
 
 export interface MenuProps {
   history: History
@@ -15,6 +15,7 @@ export interface MenuProps {
   logoMinUrl: string
   avatarUrl?: string
   defaultSection?: string
+  horizontal?: boolean
 }
 
 interface MenuContextValue {
@@ -32,7 +33,7 @@ interface MenuContextValue {
 export const MenuContext = React.createContext<MenuContextValue | null>(null);
 
 export const Menu = (props: MenuProps) => {
-  const [isCollapsed, setIsCollapsed] = React.useState(true)
+  const [isCollapsed, setIsCollapsed] = React.useState(!props.horizontal)
   const [sectionId, setSection] = React.useState<string | number | null>(
     props.defaultSection || null
   )
@@ -47,6 +48,18 @@ export const Menu = (props: MenuProps) => {
       value: sectionId,
       set: setSection
     }
+  }
+
+  if (props.horizontal) {
+    return (
+      <ContainerHorizontal>
+        <MenuContext.Provider value={menuContext}>
+          <HeaderHorizontal />
+          <BodyHorizontal />
+          <FooterHorizontal />
+        </MenuContext.Provider>
+      </ContainerHorizontal>
+    )
   }
   
   return (

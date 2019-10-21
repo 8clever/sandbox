@@ -68,3 +68,8 @@ export const FooterButton = styled.button<FooterButtonProps>`
     color: #d22643;
   }
 `
+
+export const FooterHorizontalContainer = styled.div`
+  margin-left: 8px;
+  min-width: 228px;
+`

@@ -4,9 +4,9 @@ import {Search} from "./icons/Search"
 import {Cog} from "./icons/Cog"
 import {TripleDot} from "./icons/TripleDot"
 import OutsideClickHandler from "react-outside-click-handler"
-import { FooterContainer, AvatarContainer, FooterMenu, FooterButton } from "./styled/footer.style";
+import { FooterContainer, AvatarContainer, FooterMenu, FooterButton, FooterHorizontalContainer } from "./styled/footer.style";
 import { MenuContext } from "./Menu";
-import { Anchor, Dropdown, DropdownItem } from "./styled/menu.style";
+import { Anchor, Dropdown, DropdownItem, DropdownShadow } from "./styled/menu.style";
 import { PUBLIC } from "./helper.functions";
 
 export const Footer = () => {
@@ -27,15 +27,17 @@ export const Footer = () => {
           {profileMenu ? (
             <Anchor>
               <Dropdown>
-                <DropdownItem
-                  onClick={() => {
-                    ctx.section.set(PUBLIC.PROFILE)
-                  }}
-                  separator
-                >
-                  Мой профиль
-                </DropdownItem>
-                <DropdownItem>Выйти из системы</DropdownItem>
+                <DropdownShadow>
+                  <DropdownItem
+                    onClick={() => {
+                      ctx.section.set(PUBLIC.PROFILE)
+                    }}
+                    separator
+                  >
+                    Мой профиль
+                  </DropdownItem>
+                  <DropdownItem>Выйти из системы</DropdownItem>
+                </DropdownShadow>
               </Dropdown>
             </Anchor>
           ) : null}
@@ -67,14 +69,16 @@ export const Footer = () => {
               {tripleDotMenu ? (
                 <Anchor>
                   <Dropdown>
-                    <DropdownItem separator>Уведомления</DropdownItem>
-                    <DropdownItem
-                      onClick={() => {
-                        ctx.section.set(PUBLIC.SETTINGS)
-                      }}
-                    >
-                      Настройки системы
-                    </DropdownItem>
+                    <DropdownShadow>
+                      <DropdownItem separator>Уведомления</DropdownItem>
+                      <DropdownItem
+                        onClick={() => {
+                          ctx.section.set(PUBLIC.SETTINGS)
+                        }}
+                      >
+                        Настройки системы
+                      </DropdownItem>
+                    </DropdownShadow>
                   </Dropdown>
                 </Anchor>
               ) : null}
@@ -103,5 +107,63 @@ export const Footer = () => {
         )}
       </FooterMenu>
     </FooterContainer>
+  )
+}
+
+export const FooterHorizontal = () => {
+  const [ profileMenu, setProfileMenu ] = React.useState(false);
+  const ctx = React.useContext(MenuContext);
+  const { props } = ctx;
+
+  return (
+    <FooterHorizontalContainer>
+      <FooterContainer>
+        <div>
+          <OutsideClickHandler
+            onOutsideClick={() => {
+              setProfileMenu(false)
+            }}
+          >
+            {props.avatarUrl ? (
+              <AvatarContainer
+                active={profileMenu}
+                onClick={() => {
+                  setProfileMenu(!profileMenu)
+                }}
+                src={props.avatarUrl}
+              />
+            ) : null}
+            {profileMenu ? (
+              <Anchor>
+                <Dropdown style={{ top: 15, right: -15 }}>
+                  <DropdownShadow>
+                    <DropdownItem
+                      onClick={() => {
+                        ctx.section.set(PUBLIC.PROFILE)
+                      }}
+                      separator
+                    >
+                      Мой профиль
+                    </DropdownItem>
+                    <DropdownItem>Выйти из системы</DropdownItem>
+                  </DropdownShadow>
+                </Dropdown>
+              </Anchor>
+            ) : null}
+          </OutsideClickHandler>
+        </div>
+        <FooterMenu>
+          <FooterButton style={{marginRight: 4}}>
+            <NotifIcon />
+          </FooterButton>
+          <FooterButton style={{marginRight: 4}}>
+            <Search />
+          </FooterButton>
+          <FooterButton onClick={() => ctx.section.set(PUBLIC.SETTINGS)}>
+            <Cog />
+          </FooterButton>
+        </FooterMenu>
+      </FooterContainer>
+    </FooterHorizontalContainer>
   )
 }

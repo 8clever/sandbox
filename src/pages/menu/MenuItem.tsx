@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useCallback } from "react";
 import ReactDOM from "react-dom";
 import {
   MenuItemContainer,
@@ -8,6 +8,8 @@ import {
 } from "./styled/menuItem.style"
 import {ButtonBackIcon} from "./icons/ButtonBack"
 import { useResizeObserver } from "../../effects/useResizeObserver";
+import { MenuContext } from "./Menu";
+import { Dropdown, DropdownShadow } from "./styled/menu.style";
 
 interface BackButtonProps {
   onClick: () => void
@@ -32,16 +34,6 @@ export const BackButton = (props: BackButtonProps) => {
       </div>
     </MenuItemContainer>
   )
-}
-
-export interface MenuItemProps {
-  id: string | number
-  title: React.ReactNode
-  icon?: React.ReactNode
-  path: string
-  children?: MenuItemProps[];
-  active?: boolean;
-  onClick?: () => void;
 }
 
 interface MenuTooltipProps {
@@ -88,21 +80,111 @@ export const MenuTooltip = (props: MenuTooltipProps) => {
   return <div ref={anchorRef} />;
 }
 
-export const MenuItem = (props: MenuItemProps) => {
-  const [isHover, setIsHover] = React.useState(false)
+interface MenuDropdownProps {
+  items: MenuItemProps[];
+  offsetLeft?: number;
+  offsetTop?: number;
+  isHover: boolean;
+  onMouseEnter?: () => void;
+  onMouseLeave?: () => void;
+}
+
+export const MenuDropdown = (props: MenuDropdownProps) => {
+  const [ $node, setNode ] = React.useState<HTMLDivElement | null>(null);
+  const $body = document.querySelector("body");
+  const refCallback = useCallback(node => setNode(node), []);
+
+  let Tooltip = () => null;
+  if (props.isHover && $node) {
+    const rect = $node.getBoundingClientRect();
+    Tooltip = () => (
+      <Dropdown
+        onMouseEnter={props.onMouseEnter}
+        onMouseLeave={props.onMouseLeave}
+        style={{
+          background: "rgba(255,255,255,0.7)",
+          left: rect.left + (props.offsetLeft || 0),
+          top: rect.top + (props.offsetTop || 0)
+        }}>
+        <DropdownShadow>
+          {props.items.map((i, idx) => {
+            return (
+              <MenuItem 
+                key={idx} 
+                {...i} 
+              />
+            )
+          })}
+        </DropdownShadow>
+      </Dropdown>
+    )
+  }
 
   return (
-    <MenuItemContainer active={props.active} onClick={props.onClick}>
-      <MenuTooltip 
-        children={props.title}
-        offsetLeft={40}
-        isHover={isHover} 
-      />
-      <MenuItemIconContainer
-        children={props.icon}
-        onMouseEnter={() => setIsHover(true)}
-        onMouseLeave={() => setIsHover(false)}
-      />
+    <div 
+      ref={refCallback}
+    >
+      {
+        Tooltip ?
+        ReactDOM.createPortal(<Tooltip />, $body)
+        : null
+      }
+    </div>
+  )
+}
+
+export interface MenuItemProps {
+  id: string | number
+  title: React.ReactNode
+  icon?: React.ReactNode
+  path: string
+  children?: MenuItemProps[];
+  active?: boolean;
+  onClick?: () => void;
+  tooltip?: boolean;
+  dropdownItems?: MenuItemProps[];
+}
+
+export const MenuItem = (props: MenuItemProps) => {
+  const [isHover, setIsHover] = React.useState(false)
+  const timeout = 300;
+  let timeoutHover = null;
+
+  return (
+    <MenuItemContainer 
+      onMouseEnter={() => {
+        clearTimeout(timeoutHover);
+        setIsHover(true)
+      }}
+      onMouseLeave={() => {
+        timeoutHover = setTimeout(() => {
+          setIsHover(false)
+        }, timeout);
+      }}
+      active={props.active} 
+      onClick={props.onClick}>
+
+      {
+        props.tooltip ?
+        <MenuTooltip 
+          children={props.title}
+          offsetLeft={40}
+          isHover={isHover} 
+        /> : null
+      }
+
+      {
+        props.dropdownItems ?
+        <MenuDropdown 
+          offsetTop={33}
+          offsetLeft={-17}
+          isHover={isHover}
+          items={props.dropdownItems} 
+        /> : 
+        null
+      }
+      
+      <MenuItemIconContainer children={props.icon} />
       <div style={{overflow: "hidden"}}>
         <MenuItemTitleContainer>
           {props.title}

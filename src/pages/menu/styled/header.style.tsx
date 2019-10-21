@@ -1,5 +1,9 @@
 import styled from "styled-components"
 
+export const HeaderHorizontalContainer = styled.div`
+  margin: 16px 16px 17px 16px;
+`
+
 interface HeaderContainerProps {
   isCollapsed?: boolean
 }
@@ -16,6 +20,7 @@ export const HeaderTitle = styled.div``
 
 export const Logo = styled.img`
   height: 32px;
+  width: 110px;
 `
 
 export const LogoMin = styled.img`

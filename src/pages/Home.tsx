@@ -14,13 +14,20 @@ const GlobalStyle = createGlobalStyle`
   .react-app,
   .switch-wrapper,
   .switch-wrapper > div {
-    width: 100vh;
+    width: 100vw;
     height: 100vh;
   }
 `
 
 const Container = styled.div`
   display: flex;
+  width: 100%;
+  height: 100%;
+`
+
+const ContainerColumn = styled.div`
+  display: flex;
+  flex-direction: column;
   width: 100%;
   height: 100%;
 `
@@ -46,7 +53,21 @@ const menuItems: MenuItemProps[] = [
     id: "two",
     icon: <Folder />,
     title: "Государственные программы в три строчки",
-    path: "second"
+    path: "second",
+    children: [
+      {
+        id: "asdflasdf",
+        icon: <Folder />,
+        title: "Типа тест дропдауна",
+        path: "1232323"
+      },
+      {
+        id: "1232323",
+        icon: <Folder />,
+        title: "Тип еще один тест",
+        path: "2323"
+      }
+    ]
   },
   {
     id: "three",
@@ -84,18 +105,32 @@ const menuItems: MenuItemProps[] = [
   }
 ]
 
+const logoMinUrl = "http://dev.lukoil.gost-group.com/static/media/logo_min.64bf4231.svg";
+const logoUrl = "http://dev.lukoil.gost-group.com/static/media/logo.ba3914bc.svg";
+const avatarUrl = "https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/10.png";
+
 export const Home = () => {
   return (
     <Container>
       <GlobalStyle />
       <Menu
         history={history}
-        logoUrl="http://dev.lukoil.gost-group.com/static/media/logo_min.64bf4231.svg"
-        logoMinUrl="http://dev.lukoil.gost-group.com/static/media/logo.ba3914bc.svg"
-        avatarUrl="https://raw.githubusercontent.com/Ashwinvalento/cartoon-avatar/master/lib/images/female/10.png"
+        logoUrl={logoUrl}
+        logoMinUrl={logoMinUrl}
+        avatarUrl={avatarUrl}
         items={menuItems}
       />
-      <div>
+      <ContainerColumn>
+        <div>
+          <Menu 
+            history={history}
+            logoUrl={logoUrl}
+            logoMinUrl={logoMinUrl}
+            avatarUrl={avatarUrl}
+            items={menuItems}
+            horizontal
+          />
+        </div>
         <Router history={history}>
           <Switch>
             <Route
@@ -115,7 +150,7 @@ export const Home = () => {
             <Redirect to="/second" />
           </Switch>
         </Router>
-      </div>
+      </ContainerColumn>
     </Container>
   )
 }

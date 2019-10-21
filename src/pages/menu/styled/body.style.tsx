@@ -1,5 +1,15 @@
 import styled from "styled-components";
 
+export const BodyHorizontalContainer = styled.div`
+  position: relative;
+  display: flex;
+  justify-self: stretch;
+  width: 100%;
+  height: 100%;
+  border-left: 1px solid #EDEFF1;
+  border-right: 1px solid #edeff1;
+`;
+
 interface MenuBodyContainerProps {
   isCollapsed?: boolean
 }
