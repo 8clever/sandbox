@@ -4,7 +4,8 @@ import {
   MenuItemContainer,
   MenuItemIconContainer,
   MenuItemTitleContainer,
-  MenuItemTooltip
+  MenuItemTooltip,
+  Separator
 } from "./styled/menuItem.style"
 import {ButtonBackIcon} from "./icons/ButtonBack"
 import { useResizeObserver } from "../../effects/useResizeObserver";
@@ -85,8 +86,6 @@ interface MenuDropdownProps {
   offsetLeft?: number;
   offsetTop?: number;
   isHover: boolean;
-  onMouseEnter?: () => void;
-  onMouseLeave?: () => void;
 }
 
 export const MenuDropdown = (props: MenuDropdownProps) => {
@@ -99,8 +98,6 @@ export const MenuDropdown = (props: MenuDropdownProps) => {
     const rect = $node.getBoundingClientRect();
     Tooltip = () => (
       <Dropdown
-        onMouseEnter={props.onMouseEnter}
-        onMouseLeave={props.onMouseLeave}
         style={{
           background: "rgba(255,255,255,0.7)",
           left: rect.left + (props.offsetLeft || 0),
@@ -108,11 +105,20 @@ export const MenuDropdown = (props: MenuDropdownProps) => {
         }}>
         <DropdownShadow>
           {props.items.map((i, idx) => {
+            const ni = props.items[idx + 1];
             return (
-              <MenuItem 
-                key={idx} 
-                {...i} 
-              />
+              <>
+                <MenuItem 
+                  key={idx} 
+                  {...i} 
+                />
+                {
+                  ni ?
+                  <Separator /> :
+                  null
+                }
+              </>
+              
             )
           })}
         </DropdownShadow>
@@ -143,11 +149,13 @@ export interface MenuItemProps {
   onClick?: () => void;
   tooltip?: boolean;
   dropdownItems?: MenuItemProps[];
+  disabled?: boolean;
 }
 
 export const MenuItem = (props: MenuItemProps) => {
-  const [isHover, setIsHover] = React.useState(false)
+  const [isHoverPure, setIsHover] = React.useState(false);
   const timeout = 300;
+  const isHover = props.disabled ? false : isHoverPure;
   let timeoutHover = null;
 
   return (

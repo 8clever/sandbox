@@ -5,9 +5,8 @@ import {MenuItem, BackButton} from "./MenuItem"
 import {Scrollbars} from "react-custom-scrollbars";
 import { useResizeObserver } from "../../effects/useResizeObserver"
 import { MenuContext } from "./Menu";
-import { BodyContainer, AbsoluteContainer, BodyHorizontalContainer } from "./styled/body.style";
+import { BodyContainer, AbsoluteContainer, BodyHorizontalContainer, ShadowLeft, ShadowRight } from "./styled/body.style";
 import { SpringSystem } from "rebound";
-import { Anchor, Dropdown, DropdownShadow } from "./styled/menu.style";
 
 export const Body = () => {
   const ctx = React.useContext(MenuContext);
@@ -87,14 +86,21 @@ export const Body = () => {
   )
 }
 
+const springSystem = new SpringSystem();
+
 export const BodyHorizontal = () => {
   const [ activeMenuId, setActiveMenuId ] = React.useState<string | number>();
+  const [ disabled, setDisabled ] = React.useState(false);
   const ctx = React.useContext(MenuContext);
   const { props } = ctx;
   const sections = props.items;
   const pathObj = generateRelativePath(props.items);
   const [ width, height, refCallback ] = useResizeObserver();
   const scrollbars = React.useRef<Scrollbars>();
+  const shadowLeft = React.useRef<HTMLDivElement>();
+  const shadowRight = React.useRef<HTMLDivElement>();
+  const [ spring ] = React.useState(springSystem.createSpring())
+  let disabledTimeout = null;
 
   React.useEffect(() => {
     const defaultState = props.history.location
@@ -106,19 +112,27 @@ export const BodyHorizontal = () => {
     setMenu(defaultState.pathname)
     const off = props.history.listen(state => {
       setMenu(state.pathname)
-    })
+    });
 
-    return off;
+    spring.addListener({
+      onSpringUpdate: spring => {
+        const v = spring.getCurrentValue();
+        scrollbars.current.scrollLeft(v);
+        clearTimeout(disabledTimeout);
+        setDisabled(true);
+        disabledTimeout = setTimeout(() => {
+          setDisabled(false);
+        }, 10);
+      }
+    });
+
+    return () => {
+      off();
+      spring.destroy();
+    }
   }, []);
 
-  const springSystem = new SpringSystem();
-  const spring = springSystem.createSpring();
-  spring.addListener({
-    onSpringUpdate: spring => {
-      const v = spring.getCurrentValue();
-      scrollbars.current.scrollLeft(v);
-    }
-  });
+  
 
   return (
     <BodyHorizontalContainer >
@@ -129,6 +143,16 @@ export const BodyHorizontal = () => {
             const left = scrollbars.current.getScrollLeft();
             spring.setEndValue(left + e.deltaY);
           }}
+          onUpdate={values => {
+            const { scrollLeft, scrollWidth, clientWidth } = values;
+            const shadowLeftOpacity = 1 / 20 * Math.min(scrollLeft, 20);
+            const rightScroll = scrollWidth - clientWidth;
+            const shadowRightOpacity = 1 / 20 * (rightScroll - Math.max(scrollLeft, rightScroll - 20));
+            shadowLeft.current.style.opacity = shadowLeftOpacity.toFixed();
+            shadowRight.current.style.opacity = shadowRightOpacity.toFixed();
+          }}
+          renderThumbHorizontal={() => <div />}
+          renderTrackHorizontal={() => <div />}
           autoHideTimeout={1000}
           autoHideDuration={200}
           autoHide
@@ -148,7 +172,7 @@ export const BodyHorizontal = () => {
 
               const p = {
                 ...i,
-                active: activeMenuId === i.id,
+                disabled,
                 onClick: () => {
                   if (i.children) {
                     return;
@@ -159,9 +183,13 @@ export const BodyHorizontal = () => {
 
               if (i.children) {
                 p.dropdownItems = i.children.map(ch => {
+                  const active = activeMenuId === ch.id;
+                  p.active = p.active || active;
+
                   return {
                     ...ch,
-                    active: activeMenuId === ch.id,
+                    active,
+                    disabled,
                     onClick: () => {
                       props.history.push(getUrl(ch.path, i.path));
                     }
@@ -178,6 +206,8 @@ export const BodyHorizontal = () => {
             })}
           </div>
         </Scrollbars>
+        <ShadowLeft ref={shadowLeft} />
+        <ShadowRight ref={shadowRight} />
       </AbsoluteContainer>
     </BodyHorizontalContainer>
   )

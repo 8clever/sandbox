@@ -26,7 +26,10 @@ export const Footer = () => {
         >
           {profileMenu ? (
             <Anchor>
-              <Dropdown>
+              <Dropdown style={{
+                top: -93,
+                left: 0
+              }}>
                 <DropdownShadow>
                   <DropdownItem
                     onClick={() => {
@@ -68,7 +71,10 @@ export const Footer = () => {
             >
               {tripleDotMenu ? (
                 <Anchor>
-                  <Dropdown>
+                  <Dropdown style={{
+                    top: -83,
+                    left: 0
+                  }}>
                     <DropdownShadow>
                       <DropdownItem separator>Уведомления</DropdownItem>
                       <DropdownItem

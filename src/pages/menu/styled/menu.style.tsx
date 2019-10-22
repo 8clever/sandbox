@@ -10,8 +10,7 @@ export const Dropdown = styled.div`
   position: absolute;
   min-width: 210px;
   z-index: 10;
-  bottom: 8px;
-  border-radius: 6px;
+  border-radius: 8px;
 `
 
 export const DropdownShadow = styled.div`
@@ -73,6 +72,7 @@ export const ContainerHorizontal = styled.div`
   justify-content: space-between;
   width: 100%;
   height: 65px;
+  border-bottom: 1px solid #EDEFF1;
 `
 
 

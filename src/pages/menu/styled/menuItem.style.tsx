@@ -6,7 +6,7 @@ interface MenuItemContainerProps {
 
 export const MenuItemContainer = styled.div<MenuItemContainerProps>`
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
-  padding: 13px 16px 13px 17px;
+  padding: 18px 17px 18px 17px;
   display: flex;
   cursor: pointer;
   position: relative;
@@ -72,4 +72,8 @@ export const MenuItemTooltip = styled.div`
   z-index: 1000;
 
   color: #ffffff;
+`
+export const Separator = styled.hr`
+  margin: 0;
+  border: 0.5px solid #F7F9FA;
 `
